@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Today's date</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--card:#f9f6f2;--tile:#f2e8e0;--ink:#a85d5d;--line:rgba(168,93,93,.18)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--card:#262120;--tile:#332b2a;--ink:#e3aaa2;--line:rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--card:#262120;--tile:#332b2a;--ink:#e3aaa2;--line:rgba(0,0,0,.35)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:transparent}
+body{font-family:'Quicksand','Segoe UI',system-ui,sans-serif}
+.card{width:100%;height:100%;background:var(--card);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.inner{flex:none;text-align:center;transform-origin:center center}
+h1{font-weight:500;font-size:19px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-bottom:14px}
+.row{display:flex;gap:12px;justify-content:center}
+.tile{position:relative;flex:none;background:var(--tile);border-radius:12px;padding:10px 26px;font-weight:600;font-size:56px;line-height:1.1;color:var(--ink)}
+.tile::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
+</style>
+</head>
+<body>
+<div class="card"><div class="inner" id="card">
+  <h1 id="wd"></h1>
+  <div class="row">
+    <div class="tile" id="mo"></div>
+    <div class="tile" id="dy"></div>
+    <div class="tile" id="yr"></div>
+  </div>
+</div></div>
+<script>
+// Optional override: add ?theme=dark or ?theme=light to the link
+var t=new URLSearchParams(location.search).get('theme');
+if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);
+
+function render(){
+  var d=new Date();
+  wd.textContent=d.toLocaleDateString('en-US',{weekday:'long'});
+  mo.textContent=d.toLocaleDateString('en-US',{month:'short'});
+  dy.textContent=String(d.getDate()).padStart(2,'0');
+  yr.textContent=d.getFullYear();
+}
+// Scale the whole card to fit whatever size the embed is
+function fit(){
+  var c=document.getElementById('card'),padX=6,padY=10;
+  var s=Math.min((innerWidth-padX*2)/c.offsetWidth,(innerHeight-padY*2)/c.offsetHeight);
+  c.style.transform='scale('+s+')';
+}
+render();fit();
+addEventListener('resize',fit);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+setInterval(render,60000);
+</script>
+</body>
+</html>
